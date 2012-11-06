@@ -40,6 +40,3 @@ ob_flush();
 ob_end_clean();
 //окончание рабочего файла
 ?>
-<script>
-window.alert('Hello Daniel!');
-</script>
