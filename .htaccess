@@ -26,3 +26,6 @@ RewriteBase /myWork/tshirtshop_g
 
   # Redirect product details pages
   RewriteRule ^.*-p([0-9]+)/?$ index.php?ProductId=$1 [L]
+
+  #«адает страницу по умолчаниюдл€ кода состо€ни€ 500
+  ErrorDocument 500 /tshirtshop_g/500.php;
