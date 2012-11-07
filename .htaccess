@@ -29,3 +29,6 @@ RewriteBase /myWork/tshirtshop_g
 
   #«адает страницу по умолчаниюдл€ кода состо€ни€ 500
   ErrorDocument 500 /tshirtshop_g/500.php;
+  
+  #«адает страницу по умолчаниюдл€ кода состо€ни€ 404
+  ErrorDocument 404 /tshirtshop_g/404.php;

@@ -99,6 +99,22 @@ class ProductsList
                 $this->mProductListPages[] = Link::ToIndex($i);
         }
         
+        /*Перенаправление с кодом 404, если номер запрошеной страницы больше общего числа страниц списка*/
+        if ($this->mPage > $this->mrTotalPages)
+        {
+            //Очищаем буфер вывода
+            ob_clean;
+            //Загружаем страницу 404
+            include '404.php';
+            
+                // Очистка буфера, прекращение выполнения
+                flush(); 
+                ob_flush(); 
+                ob_end_clean(); 
+                exit();
+        }
+        
+        
         //Генерируем ссылки на страницы товаров
         for ($i=0; $i< count($this->mProducts); $i++)
         {

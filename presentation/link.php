@@ -133,6 +133,22 @@ class Link
     $requested_url = self::Build(str_replace(VIRTUAL_LOCATION, '',
                                              $_SERVER['REQUEST_URI']));
     
+    // Перенаправление с кодом 404, если запрощшеный отдел, категория, товар не существуют
+    if (strstr($proper_url, '/-'))
+    {
+      // Очищаем буфер вывода
+      ob_clean();
+
+      // Загругка страницы 404
+      include '404.php';
+
+      // Очистка буфера, прекращение выполнения
+      flush(); 
+      ob_flush(); 
+      ob_end_clean(); 
+      exit();
+    }
+    
     //Перенаправление с кодом 301 по корректному URL при необходимости
     if ($requested_url != $proper_url)
     {
