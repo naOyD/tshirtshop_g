@@ -21,7 +21,7 @@
       <div id="bd">
         <div id="header" class="yui-g">
           <a href="<?php echo Link::Build(''); ?>">
-            <img src="<?php echo Link::Build('images/tshirtshop.png'); ?>"
+            <img src="<?php echo Link::Build('images/images/tshirtshop.png'); ?>"
              alt="tshirtshop logo" />
           </a>
         </div>
