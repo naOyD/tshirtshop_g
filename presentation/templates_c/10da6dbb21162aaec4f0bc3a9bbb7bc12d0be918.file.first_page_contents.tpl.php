@@ -1,6 +1,6 @@
-<?php /* Smarty version Smarty-3.1.8, created on 2012-11-05 22:58:13
+<?php /* Smarty version Smarty-3.1.8, created on 2012-11-12 22:23:57
          compiled from "C:\xampp1.8\htdocs\myWork\tshirtshop_g/presentation/templates\first_page_contents.tpl" */ ?>
-<?php /*%%SmartyHeaderCode:1754750983675eadd03-54989057%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:3166550a168ed489808-13692980%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
@@ -11,15 +11,15 @@ $_valid = $_smarty_tpl->decodeProperties(array (
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '1754750983675eadd03-54989057',
+  'nocache_hash' => '3166550a168ed489808-13692980',
   'function' => 
   array (
   ),
   'has_nocache_code' => false,
   'version' => 'Smarty-3.1.8',
-  'unifunc' => 'content_50983675eb5555_63458398',
+  'unifunc' => 'content_50a168ed48f6f8_62528573',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_50983675eb5555_63458398')) {function content_50983675eb5555_63458398($_smarty_tpl) {?>
+<?php if ($_valid && !is_callable('content_50a168ed48f6f8_62528573')) {function content_50a168ed48f6f8_62528573($_smarty_tpl) {?>
 <p class="description">
 We hope you have fun developing TShirtShop... And bla bla bla
 </p>

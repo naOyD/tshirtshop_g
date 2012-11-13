@@ -2,11 +2,15 @@
 class ProductsList
 {
     // Public переменные доступные из шаблона Smarty
-    public $mPage = 1;
-    public $mrTotalPages;
-    public $mLinkToNextPage;
-    public $mLinkToPreviousPage;
-    public $mProducts;
+  public $mPage = 1;
+  public $mrTotalPages;
+  public $mLinkToNextPage;
+  public $mLinkToPreviousPage;
+  public $mProductListPages = array();
+  public $mProducts;
+  public $mSearchDescription;
+  public $mAllWords = 'off';
+  public $mSearchString;
 
     // Private переменные
     private $_mDepartmentId;
@@ -15,6 +19,14 @@ class ProductsList
     // онструктор класса
     public function __construct()
     {
+        
+        //ѕолучаем поисковую строку и параметр AllWords из строки запроса
+    if (isset ($_GET['SearchResults']))
+    {
+      $this->mSearchString = trim(str_replace('-', ' ', $_GET['SearchString']));
+      $this->mAllWords = isset ($_GET['AllWords']) ? $_GET['AllWords'] : 'off';
+    }
+        
         //ѕолучаем DepartmentId из строки запроса и преобразуем его в int
         if (isset ($_GET['DepartmentId']))
         $this->_mDepartmentId = (int)$_GET['DepartmentId'];
@@ -32,15 +44,47 @@ class ProductsList
         
         // —охран€ем адрес страницы, посещенной последней
         $_SESSION['link_to_continue_shopping'] = $_SERVER['QUERY_STRING'];
+        
+
     }
     
     public function init()
     {
+        /*≈сли выполн€етс€ поиск, получаем список товаров, вызыва€ метод уровн€
+        логики приложени€ Search()*/
+        
+        if (isset ($this->mSearchString))
+        {
+            //ѕолучаем результаты поиска
+            $search_results = Catalog::Search($this->mSearchString,
+                                              $this->mAllWords,
+                                              $this->mPage,
+                                              $this->mrTotalPages);
+                                              
+            //ѕолучаем список товаров
+            $this->mProducts = $search_results['products'];
+            //—оставл€ем заголовок дл€ списка товаров
+            if (count($search_results['accepted_words']) > 0)
+                $this->mSearchDescription = '<p class="description"> Products containing <font class="words">'
+                . ($this->mAllWords == 'on' ? 'all' : 'any') . '</font>'
+                . ' of these words: <font class="words">'
+                . implode(', ', $search_results['accepted_words']) . '</font></p>';
+            if (count($search_results['ignored_words']) > 0)
+                $this->mSearchDescription .=
+                    '<p class="description"> Ignored Words: <font class="words">'
+                    . implode(', ', $search_results['ignored_words']) . '</font></p>';
+            if (!(count($search_results['products']) > 0))
+                $this->mSearchDescription .= 
+                '<p class="description"> Your search generated no results';
+                
+        }
+
         /*≈сли пользователь просматривает категорию, получаем список ее товаров
          вызыва€ метод уровн€ логики приложени€ GetProductsInCategory()*/
-         if (isset ($this->_mCategoryId))
+         elseif (isset ($this->_mCategoryId))
          $this->mProducts = Catalog::GetProductsInCategory($this->_mCategoryId,
          $this->mPage, $this->mrTotalPages);
+         
          
         /*≈сли посетитель просматривает отдел, получаем список его товаров,
         вызыва€ метод уровн€ логики приложени€ GetProductsOnDepartment()*/
@@ -48,6 +92,7 @@ class ProductsList
         elseif (isset ($this->_mDepartmentId))
             $this->mProducts = Catalog::GetProductsOnDepartment(
             $this->_mDepartmentId, $this->mPage, $this->mrTotalPages);
+            
         
         /*≈сли посетитель просматривает первую страницу, получаем список товаров,
         вызыва€ метод уровн€ логики приложени€ GetProductsOnCatalog()*/
@@ -58,49 +103,60 @@ class ProductsList
         
         /*≈сли список товаров разбит на несколько страниц, отображаем навигационные
         элементы управлени€*/
-        if ($this->mrTotalPages >1)
-        {
-            //—оздаем ссылку Next
-            if($this->mPage < $this->mrTotalPages)
-            {
-                if (isset($this->_mCategoryId))
-                    $this->mLinkToNextPage =
-                    Link::ToCategory($this->_mDepartmentId, $this->_mCategoryId, $this->mPage + 1);
-                elseif (isset($this->_mDepartmentId))
-                    $this->mLinkToNextPage=
-                    Link::ToDepartment($this->_mDepartmentId, $this->mPage+1);
-                
-                else
-                    $this->mLinkToNextPage = Link::ToIndex($this->mPage + 1);
-             }
-            //—оздаем ссылку Previous
-            if($this->mPage > 1)
-            {
-                if (isset($this->_mCategoryId))
-                    $this->mLinkToPreviousPage=
-                    Link::ToCategory($this->_mDepartmentId, $this->_mCategoryId, $this->mPage - 1);
-                elseif (isset($this->_mDepartmentId))
-                    $this->mLinkToPreviousPage = 
-                    Link::ToDepartment($this->_mDepartmentId, $this->mPage - 1);   
-                
-                else 
-                    $this->mLinkToPreviousPage = Link::ToIndex($this->mPage - 1);
-                 
-            }
+    if ($this->mrTotalPages > 1)
+    {
+      // Build the Next link
+      if ($this->mPage < $this->mrTotalPages)
+      {
+        if (isset($_GET['SearchResults']))
+          $this->mLinkToNextPage =
+            Link::ToSearchResults($this->mSearchString, $this->mAllWords,
+                                  $this->mPage + 1);
+        elseif (isset($this->_mCategoryId))
+          $this->mLinkToNextPage =
+            Link::ToCategory($this->_mDepartmentId, $this->_mCategoryId,
+                             $this->mPage + 1);
+        elseif (isset($this->_mDepartmentId))
+          $this->mLinkToNextPage =
+            Link::ToDepartment($this->_mDepartmentId, $this->mPage + 1);
+        else
+          $this->mLinkToNextPage = Link::ToIndex($this->mPage + 1);
+      }
+
+      // Build the Previous link
+      if ($this->mPage > 1)
+      {
+        if (isset($_GET['SearchResults']))
+          $this->mLinkToPreviousPage =
+            Link::ToSearchResults($this->mSearchString, $this->mAllWords,
+                                  $this->mPage - 1);
+        elseif (isset($this->_mCategoryId))
+          $this->mLinkToPreviousPage =
+            Link::ToCategory($this->_mDepartmentId, $this->_mCategoryId,
+                             $this->mPage - 1);
+        elseif (isset($this->_mDepartmentId))
+          $this->mLinkToPreviousPage =
+            Link::ToDepartment($this->_mDepartmentId, $this->mPage - 1);
+        else
+          $this->mLinkToPreviousPage = Link::ToIndex($this->mPage - 1);
+      }
             //—оздаем ссылки на страницы списка
-            for($i = 1; $i<= $this->mrTotalPages; $i++)
-            if (isset($this->_mCategoryId))
-                $this->mProductListPages[] = 
-                    Link::ToCategory($this->_mDepartmentId,$this->_mCategoryId,$i);
-            elseif (isset($this->_mDepartmentId))
-                $this->mProductListPages[] =
-                    Link::ToDepartment($this->_mDepartmentId,$i);
-            else   
-                $this->mProductListPages[] = Link::ToIndex($i);
+            for ($i = 1; $i <= $this->mrTotalPages; $i++)
+            if (isset($_GET['SearchResults']))
+            $this->mProductListPages[] =
+            Link::ToSearchResults($this->mSearchString, $this->mAllWords, $i);
+            elseif (isset($this->_mCategoryId))
+            $this->mProductListPages[] =
+            Link::ToCategory($this->_mDepartmentId, $this->_mCategoryId, $i);
+             elseif (isset($this->_mDepartmentId))
+            $this->mProductListPages[] =
+            Link::ToDepartment($this->_mDepartmentId, $i);
+            else
+            $this->mProductListPages[] = Link::ToIndex($i);
         }
         
         /*ѕеренаправление с кодом 404, если номер запрошеной страницы больше общего числа страниц списка*/
-        if ($this->mPage > $this->mrTotalPages)
+        if ($this->mPage > $this->mrTotalPages && !empty($this->mrTotalPages))
         {
             //ќчищаем буфер вывода
             ob_clean;

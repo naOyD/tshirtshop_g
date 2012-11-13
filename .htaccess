@@ -20,15 +20,19 @@ RewriteBase /myWork/tshirtshop_g
   # Redirect department pages
   RewriteRule ^.*-d([0-9]+)/page-([0-9]+)/?$ index.php?DepartmentId=$1&Page=$2 [L]
   RewriteRule ^.*-d([0-9]+)/?$ index.php?DepartmentId=$1 [L]
-
+  
+  # ѕерезаписываем страницы с результатами поиска
+  RewriteRule ^search-results/find-(.*)/all-words-(on|off)/page-([0-9]+)/?$ index.php?SearchResults&SearchString=$1&AllWords=$2&Page=$3 [L]
+  RewriteRule ^search-results/find-?(.*)/all-words-(on|off)/?$ index.php?SearchResults&SearchString=$1&AllWords=$2&Page=1 [L]
+  
   # Redirect subpages of the home page
   RewriteRule ^page-([0-9]+)/?$ index.php?Page=$1 [L]
 
   # Redirect product details pages
   RewriteRule ^.*-p([0-9]+)/?$ index.php?ProductId=$1 [L]
 
-  #«адает страницу по умолчаниюдл€ кода состо€ни€ 500
+  #«адает страницу по умолчанию дл€ кода состо€ни€ 500
   ErrorDocument 500 /tshirtshop_g/500.php;
   
-  #«адает страницу по умолчаниюдл€ кода состо€ни€ 404
+  #«адает страницу по умолчанию дл€ кода состо€ни€ 404
   ErrorDocument 404 /tshirtshop_g/404.php;

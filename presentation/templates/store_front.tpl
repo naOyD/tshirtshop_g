@@ -32,6 +32,7 @@
             </div> 
         </div> 
 <div class="yui-b">
+    {include file="search_box.tpl"}
     {include file="departments_list.tpl"}  <!-- YOUR NAVIGATION GOES HERE -->
     {include file=$obj->mCategoriesCell} 
        </div> 

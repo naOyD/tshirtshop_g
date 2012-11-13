@@ -1,5 +1,8 @@
 {* products_list.tpl *}
 {load_presentation_object filename="products_list" assign="obj"}
+{if $obj->mSearchDescription != ""}
+    <p class="description">{$obj->mSearchDescription}</p>
+{/if}
 {if count($obj->mProductListPages) > 0}
     <p>
     {if $obj->mLinkToPreviousPage}

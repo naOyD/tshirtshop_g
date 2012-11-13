@@ -50,5 +50,5 @@ define('HTTP_SERVER_PORT', '80');
 define('VIRTUAL_LOCATION', '/myWork/tshirtshop_g/');
 define('SHORT_PRODUCT_DESCRIPTION_LENGTH', 150);
 define('PRODUCTS_PER_PAGE',4);
-
+define('FT_MIN_WORD_LEN', 3);
 ?>

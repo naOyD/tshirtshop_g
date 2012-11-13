@@ -1,17 +1,17 @@
-<?php /* Smarty version Smarty-3.1.8, created on 2012-11-05 22:58:13
+<?php /* Smarty version Smarty-3.1.8, created on 2012-11-12 22:23:57
          compiled from "C:\xampp1.8\htdocs\myWork\tshirtshop_g/presentation/templates\products_list.tpl" */ ?>
-<?php /*%%SmartyHeaderCode:1469650983675eda5f3-32598064%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:1858250a168ed4b2a00-61742995%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
     'c40f62dbc78021598c9a650a8a50f1305bfb882e' => 
     array (
       0 => 'C:\\xampp1.8\\htdocs\\myWork\\tshirtshop_g/presentation/templates\\products_list.tpl',
-      1 => 1352150521,
+      1 => 1352753506,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '1469650983675eda5f3-32598064',
+  'nocache_hash' => '1858250a168ed4b2a00-61742995',
   'function' => 
   array (
   ),
@@ -21,12 +21,16 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'has_nocache_code' => false,
   'version' => 'Smarty-3.1.8',
-  'unifunc' => 'content_509836761cade5_25366692',
+  'unifunc' => 'content_50a168ed64dab6_68205096',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_509836761cade5_25366692')) {function content_509836761cade5_25366692($_smarty_tpl) {?><?php if (!is_callable('smarty_function_load_presentation_object')) include './presentation/smarty_plugins\\function.load_presentation_object.php';
+<?php if ($_valid && !is_callable('content_50a168ed64dab6_68205096')) {function content_50a168ed64dab6_68205096($_smarty_tpl) {?><?php if (!is_callable('smarty_function_load_presentation_object')) include './presentation/smarty_plugins\\function.load_presentation_object.php';
 ?>
 <?php echo smarty_function_load_presentation_object(array('filename'=>"products_list",'assign'=>"obj"),$_smarty_tpl);?>
 
+<?php if ($_smarty_tpl->tpl_vars['obj']->value->mSearchDescription!=''){?>
+    <p class="description"><?php echo $_smarty_tpl->tpl_vars['obj']->value->mSearchDescription;?>
+</p>
+<?php }?>
 <?php if (count($_smarty_tpl->tpl_vars['obj']->value->mProductListPages)>0){?>
     <p>
     <?php if ($_smarty_tpl->tpl_vars['obj']->value->mLinkToPreviousPage){?>
