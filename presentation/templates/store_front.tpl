@@ -12,32 +12,37 @@
 </head> 
 <body class="yui-skin-sam"> 
     <div id="doc" class="yui-t2"> 
-    
-    
-    
-    <div id="bd"> 
-        <div id="yui-main"> 
+        <div id="bd"> 
+           <div id="yui-main"> 
+              <div class="yui-b">
+                 <div id='header'class="yui-g"> 
+                  <a href="{$obj->mSiteUrl}">
+                    <img src="{$obj->mSiteUrl}images/images/title.png" alt="tshirtshop logo"/>
+                  </a>
+                 </div> 
+                 <div id="contents" class="yui-g"> 
+                      {include file=$obj->mContentsCell}
+                 </div> 
+            </div> 
+          </div> 
             <div class="yui-b">
-                    <div id='header'class="yui-g"> 
-                            <a href="{$obj->mSiteUrl}">
-                            <img src="{$obj->mSiteUrl}images/images/title.png" 
-                            alt="tshirtshop logo"/>
-                            </a>
-                                <!-- YOUR DATA GOES HERE --> 
-                    </div> 
-                    <div id="contents" class="yui-g"> 
-                    {include file=$obj->mContentsCell}           <!-- YOUR CONTENT`s GOES HERE -->
-                      
-                    </div> 
+             {include file="search_box.tpl"}
+             {include file="departments_list.tpl"}
+             {include file=$obj->mCategoriesCell} 
+            <div class="view-cart">
+                <form target="_self" method="post" action="{$smarty.const.PAYPAL_URL}">
+                <input type='hidden' name="cmd" value="_cart"/>
+                <input type="hidden" name="business" value="{$smarty.const.PAYPAL_EMAIL}"/>
+                <input type="hidden" name="display" value="1"/>
+                <input type="hidden" name="shopping_url" value="{$obj->mPayPalContinueShoppingLink}"/>
+                <input type="hidden" name="return" value="{$smarty.const.PAYPAL_RETURN_URL}"/>
+                <input type="hidden" name="return" value="{$smarty.const.PAYPAL_CANCEL_RETURN_URL}"/>
+                <input type="submit" name="view_cart" value="View Cart"/>
+                </form>
+            </div>
             </div> 
         </div> 
-<div class="yui-b">
-    {include file="search_box.tpl"}
-    {include file="departments_list.tpl"}  <!-- YOUR NAVIGATION GOES HERE -->
-    {include file=$obj->mCategoriesCell} 
-       </div> 
- </div> 
-<div id="ft" role="contentinfo">created by naOy</div> 
-</div> 
+       <div id="ft" role="contentinfo">created by naOy</div> 
+    </div> 
 </body> 
 </html> 

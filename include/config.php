@@ -51,4 +51,11 @@ define('VIRTUAL_LOCATION', '/myWork/tshirtshop_g/');
 define('SHORT_PRODUCT_DESCRIPTION_LENGTH', 150);
 define('PRODUCTS_PER_PAGE',4);
 define('FT_MIN_WORD_LEN', 3);
+
+//Настройка конфигурации PAYPAL
+define('PAYPAL_URL', 'https://www.paypal.com/cgi-bin/webscr');
+define('PAYPAL_EMAIL', 'the.naoy@gmail.com');
+define('PAYPAL_CURRENCY_CODE', 'USD');
+define('PAYPAL_RETURN_URL', 'http://localhost/myWork/tshirtshop_g');
+define('PAYPAL_CANCEL_RETURN_URL', 'http://localhost/myWork/tshirtshop_g');
 ?>

@@ -1,4 +1,10 @@
-﻿--- создаем хранимую процедуру catalog_count_search_result
+﻿-- Create full-text search index
+CREATE FULLTEXT INDEX `idx_ft_product_name_description`
+       ON `product` (`name`, `description`);
+
+
+
+--- создаем хранимую процедуру catalog_count_search_result
 CREATE PROCEDURE catalog_count_search_result(
 IN inSearchString TEXT, IN inAllWords VARCHAR(3))
 BEGIN

@@ -1,7 +1,7 @@
 <?php
 class ProductsList
 {
-    // Public переменные доступные из шаблона Smarty
+  // Public variables to be read from Smarty template
   public $mPage = 1;
   public $mrTotalPages;
   public $mLinkToNextPage;
@@ -12,97 +12,88 @@ class ProductsList
   public $mAllWords = 'off';
   public $mSearchString;
 
-    // Private переменные
-    private $_mDepartmentId;
-    private $_mCategoryId;
-    
-    // онструктор класса
-    public function __construct()
-    {
-        
-        //ѕолучаем поисковую строку и параметр AllWords из строки запроса
+  // Private members
+  private $_mDepartmentId;
+  private $_mCategoryId;
+
+  // Class constructor
+  public function __construct()
+  {
+    // Retrieve the search string and AllWords from the query string
     if (isset ($_GET['SearchResults']))
     {
       $this->mSearchString = trim(str_replace('-', ' ', $_GET['SearchString']));
       $this->mAllWords = isset ($_GET['AllWords']) ? $_GET['AllWords'] : 'off';
     }
-        
-        //ѕолучаем DepartmentId из строки запроса и преобразуем его в int
-        if (isset ($_GET['DepartmentId']))
-        $this->_mDepartmentId = (int)$_GET['DepartmentId'];
-        
-        //ѕолучаем CategoryId из строки запроса и преобразуем его в int
-        if (isset ($_GET['CategoryId']))
-        $this->_mCategoryId = (int)$_GET['CategoryId'];
-        
-        //ѕолучаем номер страницы из строки запроса и преобразуем его в int
-        if (isset ($_GET['Page']))
-        $this->mPage=(int)$_GET['Page'];
-        
-        if ($this->mPage < 1)
-        trigges_error('Incorrect Page Value');
-        
-        // —охран€ем адрес страницы, посещенной последней
-        $_SESSION['link_to_continue_shopping'] = $_SERVER['QUERY_STRING'];
-        
 
-    }
-    
-    public function init()
+    // Get DepartmentId from query string casting it to int
+    if (isset ($_GET['DepartmentId']))
+      $this->_mDepartmentId = (int)$_GET['DepartmentId'];
+
+    // Get CategoryId from query string casting it to int
+    if (isset ($_GET['CategoryId']))
+      $this->_mCategoryId = (int)$_GET['CategoryId'];
+
+    // Get Page number from query string casting it to int
+    if (isset ($_GET['Page']))
+      $this->mPage = (int)$_GET['Page'];
+
+    if ($this->mPage < 1)
+      trigger_error('Incorrect Page value');
+
+    // Save page request for continue shopping functionality
+    $_SESSION['link_to_continue_shopping'] = $_SERVER['QUERY_STRING'];
+  }
+
+  public function init()
+  {
+    /* If searching the catalog, get the list of products by calling
+       the Search business tier method */
+    if (isset ($this->mSearchString))
     {
-        /*≈сли выполн€етс€ поиск, получаем список товаров, вызыва€ метод уровн€
-        логики приложени€ Search()*/
-        
-        if (isset ($this->mSearchString))
-        {
-            //ѕолучаем результаты поиска
-            $search_results = Catalog::Search($this->mSearchString,
-                                              $this->mAllWords,
-                                              $this->mPage,
-                                              $this->mrTotalPages);
-                                              
-            //ѕолучаем список товаров
-            $this->mProducts = $search_results['products'];
-            //—оставл€ем заголовок дл€ списка товаров
-            if (count($search_results['accepted_words']) > 0)
-                $this->mSearchDescription = '<p class="description"> Products containing <font class="words">'
-                . ($this->mAllWords == 'on' ? 'all' : 'any') . '</font>'
-                . ' of these words: <font class="words">'
-                . implode(', ', $search_results['accepted_words']) . '</font></p>';
-            if (count($search_results['ignored_words']) > 0)
-                $this->mSearchDescription .=
-                    '<p class="description"> Ignored Words: <font class="words">'
-                    . implode(', ', $search_results['ignored_words']) . '</font></p>';
-            if (!(count($search_results['products']) > 0))
-                $this->mSearchDescription .= 
-                '<p class="description"> Your search generated no results';
-                
-        }
+      // Get search results
+      $search_results = Catalog::Search($this->mSearchString,
+                                        $this->mAllWords,
+                                        $this->mPage,
+                                        $this->mrTotalPages);
+      // Get the list of products
+      $this->mProducts = $search_results['products'];
+      // Build the title for the list of products
+      if (count($search_results['accepted_words']) > 0)
+        $this->mSearchDescription =
+          '<p class="description">Products containing <font class="words">'
+          . ($this->mAllWords == 'on' ? 'all' : 'any') . '</font>'
+          . ' of these words: <font class="words">'
+          . implode(', ', $search_results['accepted_words']) .
+          '</font></p>';
+      if (count($search_results['ignored_words']) > 0)
+        $this->mSearchDescription .=
+          '<p class="description">Ignored words: <font class="words">'
+          . implode(', ', $search_results['ignored_words']) .
+          '</font></p>';
+      if (!(count($search_results['products']) > 0))
+        $this->mSearchDescription .=
+          '<p class="description">Your search generated no results.</p>';
+    }
+    /* If browsing a category, get the list of products by calling
+       the GetProductsInCategory() business tier method */
+    elseif (isset ($this->_mCategoryId))
+      $this->mProducts = Catalog::GetProductsInCategory(
+        $this->_mCategoryId, $this->mPage, $this->mrTotalPages);
+    /* If browsing a department, get the list of products by calling
+       the GetProductsOnDepartmentDisplay() business tier method */
+    elseif (isset ($this->_mDepartmentId))
+      $this->mProducts = Catalog::GetProductsOnDepartment(
+        $this->_mDepartmentId, $this->mPage, $this->mrTotalPages);
+    /* If browsing the first page, get the list of products by
+       calling the GetProductsOnCatalog() business
+       tier method */
+    else
+      $this->mProducts = Catalog::GetProductsOnCatalog(
+                           $this->mPage, $this->mrTotalPages);
 
-        /*≈сли пользователь просматривает категорию, получаем список ее товаров
-         вызыва€ метод уровн€ логики приложени€ GetProductsInCategory()*/
-         elseif (isset ($this->_mCategoryId))
-         $this->mProducts = Catalog::GetProductsInCategory($this->_mCategoryId,
-         $this->mPage, $this->mrTotalPages);
-         
-         
-        /*≈сли посетитель просматривает отдел, получаем список его товаров,
-        вызыва€ метод уровн€ логики приложени€ GetProductsOnDepartment()*/
-        
-        elseif (isset ($this->_mDepartmentId))
-            $this->mProducts = Catalog::GetProductsOnDepartment(
-            $this->_mDepartmentId, $this->mPage, $this->mrTotalPages);
-            
-        
-        /*≈сли посетитель просматривает первую страницу, получаем список товаров,
-        вызыва€ метод уровн€ логики приложени€ GetProductsOnCatalog()*/
-        
-        else 
-        $this->mProducts = Catalog::GetProductsOnCatalog(
-        $this->mPage, $this->mrTotalPages);
-        
-        /*≈сли список товаров разбит на несколько страниц, отображаем навигационные
-        элементы управлени€*/
+    /* If there are subpages of products, display navigation
+       controls */
     if ($this->mrTotalPages > 1)
     {
       // Build the Next link
@@ -140,52 +131,56 @@ class ProductsList
         else
           $this->mLinkToPreviousPage = Link::ToIndex($this->mPage - 1);
       }
-            //—оздаем ссылки на страницы списка
-            for ($i = 1; $i <= $this->mrTotalPages; $i++)
-            if (isset($_GET['SearchResults']))
-            $this->mProductListPages[] =
+
+      // Build the pages links
+      for ($i = 1; $i <= $this->mrTotalPages; $i++)
+        if (isset($_GET['SearchResults']))
+          $this->mProductListPages[] =
             Link::ToSearchResults($this->mSearchString, $this->mAllWords, $i);
-            elseif (isset($this->_mCategoryId))
-            $this->mProductListPages[] =
+        elseif (isset($this->_mCategoryId))
+          $this->mProductListPages[] =
             Link::ToCategory($this->_mDepartmentId, $this->_mCategoryId, $i);
-             elseif (isset($this->_mDepartmentId))
-            $this->mProductListPages[] =
+        elseif (isset($this->_mDepartmentId))
+          $this->mProductListPages[] =
             Link::ToDepartment($this->_mDepartmentId, $i);
-            else
-            $this->mProductListPages[] = Link::ToIndex($i);
-        }
-        
-        /*ѕеренаправление с кодом 404, если номер запрошеной страницы больше общего числа страниц списка*/
-        if ($this->mPage > $this->mrTotalPages && !empty($this->mrTotalPages))
-        {
-            //ќчищаем буфер вывода
-            ob_clean;
-            //«агружаем страницу 404
-            include '404.php';
-            
-                // ќчистка буфера, прекращение выполнени€
-                flush(); 
-                ob_flush(); 
-                ob_end_clean(); 
-                exit();
-        }
-        
-        
-        //√енерируем ссылки на страницы товаров
-        for ($i=0; $i< count($this->mProducts); $i++)
-        {
-            $this->mProducts[$i]['link_to_product'] = 
-                Link::ToProduct($this->mProducts[$i]['product_id']);
-                
-                if ($this->mProducts[$i]['thumbnail'])
-                $this->mProducts[$i]['thumbnail'] = 
-                Link::Build('images/product_images/' . 
-                $this->mProducts[$i]['thumbnail']);
-                
-                $this->mProducts[$i]['attributes'] = 
-                Catalog::GetProductAttributes($this->mProducts[$i]['product_id']);
-        }
+        else
+          $this->mProductListPages[] = Link::ToIndex($i);
     }
-        
+
+    /* 404 redirect if the page number is larger than
+       the total number of pages */
+    if ($this->mPage > $this->mrTotalPages && !empty($this->mrTotalPages))
+    {
+      // Clean output buffer
+      ob_clean();
+
+      // Load the 404 page
+      include '404.php';
+
+      // Clear the output buffer and stop execution
+      flush(); 
+      ob_flush(); 
+      ob_end_clean(); 
+      exit();
+    }
+
+    // Build links for product details pages
+    for ($i = 0; $i < count($this->mProducts); $i++)
+    {
+      $this->mProducts[$i]['link_to_product'] =
+        Link::ToProduct($this->mProducts[$i]['product_id']);
+
+      if ($this->mProducts[$i]['thumbnail'])
+        $this->mProducts[$i]['thumbnail'] =
+          Link::Build('images/product_images/' . $this->mProducts[$i]['thumbnail']);
+
+      // Create the Add to Cart link
+      $this->mProducts[$i]['link_to_add_product'] =
+        Link::ToAddProduct($this->mProducts[$i]['product_id']);
+
+      $this->mProducts[$i]['attributes'] =
+        Catalog::GetProductAttributes($this->mProducts[$i]['product_id']);
+    }
+  }
 }
 ?>

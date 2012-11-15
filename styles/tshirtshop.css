@@ -172,3 +172,21 @@ input, select, textarea {
 .words {
     color: #ff0000;
 }
+
+div.yui-b div form.add-product-form 
+{
+    margin: 0;
+    padding: 0;
+}
+
+.add-product-form p
+{
+    margin: 0;
+    padding: 0 0 10px 0;
+}
+
+.view-cart
+{
+    padding: 10px;
+    text-align: center;
+}

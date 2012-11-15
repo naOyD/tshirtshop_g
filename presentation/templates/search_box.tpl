@@ -1,4 +1,4 @@
-﻿{* search_box.tpl *}
+{* search_box.tpl *}
 {load_presentation_object filename="search_box" assign="obj"}
 {* Start search box *}
 <div class="box">
