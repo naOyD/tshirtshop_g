@@ -92,7 +92,7 @@ DocProject/Help/*.hhk
 DocProject/Help/*.hhp
 DocProject/Help/Html2
 DocProject/Help/html
-DocProject/presentation/templates_c/
+presentation/templates_c/
 
 # Click-Once directory
 publish
