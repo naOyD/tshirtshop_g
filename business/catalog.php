@@ -308,7 +308,49 @@ public static function GetProductName($productId)
     // Return the results
     return $search_result;
   }
+  
+  //Извлекает из БД, названия и описания отделов
+  public static function GetDepartmentsWithDescriptions()
+  {
+    //Составляем SQL - query
+    $sql = 'CALL catalog_get_departments()';
     
+    //Execute the query
+    return DatabaseHandler::GetAll($sql);
+  }
+  
+  //Добавляем отдел
+  public static function AddDepartment($departmentName, $departmentDescription)
+  {
+    $sql = 'CALL catalog_add_department(:department_name, 
+                                        :department_description)';
+                                        
+    $params = array (':department_name' => $departmentName,
+                     ':department_description' => $departmentDescription);
+                     
+    DatabaseHandler::Execute($sql, $params);
+  }
+  
+  //Обновляем сведения об отделе
+  public static function UpdateDepartment($departmentId, $departmentName, $departmentDescription)
+  {
+    $sql = 'CALL catalog_update_department(:department_id, 
+                                           :department_name, 
+                                           :department_description)';
+    $params = array (':department_id' => $departmentId,
+                     ':department_name' => $departmentName,
+                     ':department_description' => $departmentDescription); 
+                       
+    DatabaseHandler::Execute($sql, $params); 
+  }
+  
+  public static function DeleteDepartment($departmentId)
+  {
+    $sql = 'CALL catalog_delete_department(:department_id)';
+    $params = array (':department_id' => $departmentId);
+    return DatabaseHandler::Execute($sql, $params); 
+  }
+  
 }  
 
 ?>

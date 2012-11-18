@@ -50,12 +50,14 @@ define('HTTP_SERVER_PORT', '80');
 define('VIRTUAL_LOCATION', '/myWork/tshirtshop_g/');
 define('SHORT_PRODUCT_DESCRIPTION_LENGTH', 150);
 define('PRODUCTS_PER_PAGE',4);
-define('FT_MIN_WORD_LEN', 3);
 
-//Настройка конфигурации PAYPAL
-define('PAYPAL_URL', 'https://www.paypal.com/cgi-bin/webscr');
-define('PAYPAL_EMAIL', 'the.naoy@gmail.com');
-define('PAYPAL_CURRENCY_CODE', 'USD');
-define('PAYPAL_RETURN_URL', 'http://localhost/myWork/tshirtshop_g');
-define('PAYPAL_CANCEL_RETURN_URL', 'http://localhost/myWork/tshirtshop_g');
+
+//Если эта константа не установлена в no, доступ к страницам 
+//Администрирования возможен только с помощью SSL
+define('USE_SSL', 'no');
+
+//Идентификатор и пароль администратора
+define('ADMIN_USERNAME', 'admin');
+define('ADMIN_PASSWORD', 'admin');
+
 ?>
