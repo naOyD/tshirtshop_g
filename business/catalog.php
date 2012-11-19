@@ -351,6 +351,66 @@ public static function GetProductName($productId)
     return DatabaseHandler::Execute($sql, $params); 
   }
   
+    // Gets categories in a department
+  public static function GetDepartmentCategories($departmentId)
+  {
+    // Build the SQL query
+    $sql = 'CALL catalog_get_department_categories(:department_id)';
+
+    // Build the parameters array
+    $params = array (':department_id' => $departmentId);
+
+    // Execute the query and return the results
+    return DatabaseHandler::GetAll($sql, $params);
+  }
+
+  // Adds a category
+  public static function AddCategory($departmentId, $categoryName,
+                                     $categoryDescription)
+  {
+    // Build the SQL query
+    $sql = 'CALL catalog_add_category(:department_id, :category_name,
+                                      :category_description)';
+
+    // Build the parameters array
+    $params = array (':department_id' => $departmentId,
+                     ':category_name' => $categoryName,
+                     ':category_description' => $categoryDescription);
+
+    // Execute the query
+    DatabaseHandler::Execute($sql, $params);
+  }
+
+  // Updates a category
+  public static function UpdateCategory($categoryId, $categoryName,
+                                        $categoryDescription)
+  {
+    // Build the SQL query
+    $sql = 'CALL catalog_update_category(:category_id, :category_name,
+                                         :category_description)';
+
+    // Build the parameters array
+    $params = array (':category_id' => $categoryId,
+                     ':category_name' => $categoryName,
+                     ':category_description' => $categoryDescription);
+
+    // Execute the query
+    DatabaseHandler::Execute($sql, $params);
+  }
+
+  // Deletes a category
+  public static function DeleteCategory($categoryId)
+  {
+    // Build the SQL query
+    $sql = 'CALL catalog_delete_category(:category_id)';
+
+    // Build the parameters array
+    $params = array (':category_id' => $categoryId);
+
+    // Execute the query and return the results
+    return DatabaseHandler::GetOne($sql, $params);
+  }
+  
 }  
 
 ?>
