@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.8, created on 2012-11-19 22:18:27
+<?php /* Smarty version Smarty-3.1.8, created on 2012-11-22 21:42:03
          compiled from "C:\xampp1.8\htdocs\myWork\tshirtshop_g/presentation/templates\admin_menu.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:3221350aaa2232f8870-68048263%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '593a8b73afb4e6bd992f7895adf1997715a4d088' => 
     array (
       0 => 'C:\\xampp1.8\\htdocs\\myWork\\tshirtshop_g/presentation/templates\\admin_menu.tpl',
-      1 => 1353184550,
+      1 => 1353616260,
       2 => 'file',
     ),
   ),
@@ -15,13 +15,13 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'function' => 
   array (
   ),
+  'version' => 'Smarty-3.1.8',
+  'unifunc' => 'content_50aaa22335e9a6_53648703',
   'variables' => 
   array (
     'obj' => 0,
   ),
   'has_nocache_code' => false,
-  'version' => 'Smarty-3.1.8',
-  'unifunc' => 'content_50aaa22335e9a6_53648703',
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_50aaa22335e9a6_53648703')) {function content_50aaa22335e9a6_53648703($_smarty_tpl) {?><?php if (!is_callable('smarty_function_load_presentation_object')) include './presentation/smarty_plugins\\function.load_presentation_object.php';
 ?>
@@ -31,6 +31,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
  <p>
   <a href="<?php echo $_smarty_tpl->tpl_vars['obj']->value->mLinkToStoreAdmin;?>
 ">CATALOG ADMIN</a>
+  <a href="<?php echo $_smarty_tpl->tpl_vars['obj']->value->mLinkToAttributesAdmin;?>
+">PRODUCTS ATTRIBUTES ADMIN</a>
   <a href="<?php echo $_smarty_tpl->tpl_vars['obj']->value->mLinkToStoreFront;?>
 ">STOREFRONT</a>
   <a href="<?php echo $_smarty_tpl->tpl_vars['obj']->value->mLinkToLogout;?>

@@ -411,6 +411,125 @@ public static function GetProductName($productId)
     return DatabaseHandler::GetOne($sql, $params);
   }
   
+    // Retrieves all attributes
+  public static function GetAttributes()
+  {
+    // Build the SQL query
+    $sql = 'CALL catalog_get_attributes()';
+
+    // Execute the query and return the results
+    return DatabaseHandler::GetAll($sql);
+  }
+
+  // Add an attribute
+  public static function AddAttribute($attributeName)
+  {
+    // Build the SQL query
+    $sql = 'CALL catalog_add_attribute(:attribute_name)';
+
+    // Build the parameters array
+    $params = array (':attribute_name' => $attributeName);
+
+    // Execute the query
+    DatabaseHandler::Execute($sql, $params);
+  }
+
+  // Updates attribute name
+  public static function UpdateAttribute($attributeId, $attributeName)
+  {
+    // Build the SQL query
+    $sql = 'CALL catalog_update_attribute(:attribute_id, :attribute_name)';
+
+    // Build the parameters array
+    $params = array (':attribute_id' => $attributeId,
+                     ':attribute_name' => $attributeName);
+
+    // Execute the query
+    DatabaseHandler::Execute($sql, $params);
+  }
+
+  // Deletes an attribute
+  public static function DeleteAttribute($attributeId)
+  {
+    // Build the SQL query
+    $sql = 'CALL catalog_delete_attribute(:attribute_id)';
+
+    // Build the parameters array
+    $params = array (':attribute_id' => $attributeId);
+
+    // Execute the query and return the results
+    return DatabaseHandler::GetOne($sql, $params);
+  }
+
+  // Retrieves details for the specified attribute
+  public static function GetAttributeDetails($attributeId)
+  {
+    // Build SQL query
+    $sql = 'CALL catalog_get_attribute_details(:attribute_id)';
+
+    // Build the parameters array
+    $params = array (':attribute_id' => $attributeId);
+
+    // Execute the query and return the results
+    return DatabaseHandler::GetRow($sql, $params);
+  }
+
+  // Gets atribute values
+  public static function GetAttributeValues($attributeId)
+  {
+    // Build the SQL query
+    $sql = 'CALL catalog_get_attribute_values(:attribute_id)';
+
+    // Build the parameters array
+    $params = array (':attribute_id' => $attributeId);
+
+    // Execute the query and return the results
+    return DatabaseHandler::GetAll($sql, $params);
+  }
+
+  // Adds an attribute value
+  public static function AddAttributeValue($attributeId, $attributeValue)
+  {
+    // Build the SQL query
+    $sql = 'CALL catalog_add_attribute_value(:attribute_id, :value)';
+
+    // Build the parameters array
+    $params = array (':attribute_id' => $attributeId,
+                     ':value' => $attributeValue);
+
+    // Execute the query
+    DatabaseHandler::Execute($sql, $params);
+  }
+
+  // Updates an atribute value
+  public static function UpdateAttributeValue(
+                           $attributeValueId, $attributeValue)
+  {
+    // Build the SQL query
+    $sql = 'CALL catalog_update_attribute_value(
+                   :attribute_value_id, :value)';
+
+    // Build the parameters array
+    $params = array (':attribute_value_id' => $attributeValueId,
+                     ':value' => $attributeValue);
+
+    // Execute the query
+    DatabaseHandler::Execute($sql, $params);
+  }
+
+  // Deletes an attribute value
+  public static function DeleteAttributeValue($attributeValueId)
+  {
+    // Build the SQL query
+    $sql = 'CALL catalog_delete_attribute_value(:attribute_value_id)';
+
+    // Build the parameters array
+    $params = array (':attribute_value_id' => $attributeValueId);
+
+    // Execute the query and return the results
+    return DatabaseHandler::GetOne($sql, $params);
+  }
+
 }  
 
 ?>

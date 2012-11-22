@@ -212,13 +212,18 @@ class Link
   }
   
   //Создаем ссылку на страницу администрирования
-  public static function ToAdmin($params = '')
+    public static function ToAdmin($params = '')
   {
     $link = 'admin.php';
+
     if ($params != '')
-        $link .= '?' . $params;
-        return self::Build($link, 'https');
+      $link .= '?' . $params;
+
+    return self::Build($link, 'https');
   }
+  
+  
+  
   //Создаем ссылку на выход
   public static function ToLogout()
   {
@@ -233,6 +238,20 @@ class Link
   public static function ToDepartmentCategoriesAdmin($departmentId)
   {
     $link = 'Page=Categories&DepartmentId=' . $departmentId;
+    
+    return self::ToAdmin($link);
+  }
+  
+  //Создаем ссылку на страницу атрибутов
+  public static function ToAttributesAdmin()
+  {
+    return self::ToAdmin('Page=Attributes');
+  }
+  
+  //Создает ссылку на страницу администрирования значений атрибутов
+  public static function ToAttributeValuesAdmin($attributeId)
+  {
+    $link = 'Page=AttributeValues&AttributeId=' . $attributeId;
     
     return self::ToAdmin($link);
   }
