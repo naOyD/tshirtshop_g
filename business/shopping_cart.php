@@ -98,6 +98,38 @@ class ShoppingCart
     }
     
     // Получает список товаров в корзине 
+    public static function GetCartProducts($cartProductsType)
+    {
+        $sql = '';
+        // При получении списка товаров для немедленной оплаты
+        if ($cartProductsType == GET_CART_PRODUCTS)
+        {
+            // Составляем SQL - запрос
+            $sql = 'CALL shopping_cart_get_products(:cart_id)';
+        }
+        // При получении списка товаров, отложенных для оплаты в будущем...
+        elseif ($cartProductsType == GET_CART_SAVED_PRODUCTS) 
+        {
+            // Составляем SQL - запрос
+            $sql = 'CALL shopping_cart_get_saved_products(:cart_id)';
+        }
+        else
+            trigger_error ($cartProductsType . 'value unknown', E_USER_ERROR);
+        
+        // Создаем массив параметров
+        $params = array (':cart_id' => self::GetCartId());
+        
+        // Выполняем запрос и возвращаем результат
+        return DatabaseHandler::GetAll($sql, $params);
+    }
+    
+    /* Получает общую стоимость товаров в корзине 
+   (Кроме товаров отложенных для оплаты в будующем*/
+    public static function GetTotalAmount()
+    {
+        // Составляем SQL - запрос
+        
+    }
 }
 ?>
 
