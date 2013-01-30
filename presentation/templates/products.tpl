@@ -17,6 +17,7 @@
   {else}
     <span class="price">{$obj->mProduct.price}</span>
   {/if}
+&nbsp; руб.
 </p>
 
 {* The Add to Cart form *}
@@ -57,11 +58,19 @@
   <input type="submit" name="submit" value="Add to Cart" />
 </p>
 </form>
-
-{if $obj->mLinkToContinueShopping}
-<a href="{$obj->mLinkToContinueShopping}">Continue Shopping</a>
+{* Отображаем кнопку редактирования для админов*}
+{if $obj->mShowEditButton}
+    <form action="{$obj->mEditActionTarget}" target="_self" 
+          method="post" class="edit-form">
+     <p>
+       <input type="submit" name="submit_edit" value="Редактировать товар" />         
+     </p>
+ </form>
 {/if}
-<h2>Find similar products in our catalog:</h2>
+{if $obj->mLinkToContinueShopping}
+<a href="{$obj->mLinkToContinueShopping}">Продолжить покупки</a>
+{/if}
+<h2>Найти похожие продукты в друних каталогах:</h2>
 <ol>
 {section name=i loop=$obj->mLocations}
   <li class="navigation">

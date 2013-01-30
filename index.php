@@ -3,7 +3,7 @@
 session_start();
 //Создаем входной буфер
 ob_start();
-
+echo 'IT`S TESTED VERSION!!!';
 // Подключение служебных файлов
 require_once 'include/config.php';
 require_once BUSINESS_DIR . 'error_handler.php';

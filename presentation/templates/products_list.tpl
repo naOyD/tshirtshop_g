@@ -54,6 +54,7 @@
           {else}
             <span class="price">{$obj->mProducts[k].price}</span>
           {/if}
+          &nbsp; руб. 
         </p>
 
         {* The Add to Cart form *}
@@ -94,7 +95,15 @@
           <input type="submit" name="submit" value="Add to Cart" />
         </p>
         </form>
-
+{* Отображаем кнопку для редакитрования (for admin only*}
+{if $obj->mShowEditButton}
+    <form method="post" action="{$obj->mEditActionTarget}" target="_self"
+          class="edit-form" >
+        <input type="hidden" name="product_id" 
+               value="{$obj->mProducts[k].product_id}" />
+        <input type="submit" name="submit" value="Редактировать товар"/>
+    </form>
+{/if}
       </td>
     {if $smarty.section.k.index % 2 != 0 && !$smarty.section.k.first ||
         $smarty.section.k.last}

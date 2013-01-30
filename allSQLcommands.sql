@@ -255,12 +255,134 @@ BEGIN
   END IF;
 END$$
 
+--создаем хранимую процедуру catalog_get_category_products
+create procedure catalog_get_category_products (IN  inCategoryId INT)
+begin
+    select p.product_id, p.name, p.description, p.price, p.discounted_price
+    from product p
+    inner join product_category pc
+                on p.product_id = pc.product_id
+    where pc.category_id = inCategoryId
+    order by p.product_id;
+end$$
+
+--создаем хранимую процедуру catalog_add_product_to_category
+create procedure catalog_add_product_to_category (IN inCategoryId INT, IN inName VARCHAR(100), 
+IN inDescription VARCHAR(1000), IN inPrice DECIMAL(10,2))
+BEGIN
+    DECLARE productLastInsertId INT;
+    insert into product (name, description, price)
+    values (inName, inDescription, inPrice);
+    
+    select last_insert_id() into productLastInsertId;
+    
+    insert into product_category (product_id, category_id)
+    values (productLastInsertId, inCategoryId);
+END$$
+
+-- Create shopping_cart table
+CREATE TABLE `shopping_cart` (
+  `item_id`     INT           NOT NULL  AUTO_INCREMENT,
+  `cart_id`     CHAR(32)      NOT NULL,
+  `product_id`  INT           NOT NULL,
+  `attributes`  VARCHAR(1000) NOT NULL,
+  `quantity`    INT           NOT NULL,
+  `buy_now`     BOOL          NOT NULL  DEFAULT true,
+  `added_on`    DATETIME      NOT NULL,
+  PRIMARY KEY (`item_id`),
+  KEY `idx_shopping_cart_cart_id` (`cart_id`)
+) ENGINE=MyISAM;
 
 
+--создаем хранимую процедуру shopping_cart_add_product
+create procedure shopping_cart_add_product (IN inCartId CHAR(32), 
+IN inProductId INT, IN inAttributes VARCHAR(1000))
+BEGIN
+DECLARE productQuantity INT;
+SELECT quantity
+FROM shopping_cart
+    WHERE cart_id = inCartId
+    AND product_id = inProductId
+    AND attributes = inAttributes
+INTO productQuantity;
 
+IF productQuantity IS NULL THEN
+    INSERT INTO shopping_cart(cart_id, product_id, attributes, quantity, 
+                                added_on)
+    VALUES (inCartId, inProductId, inAttributes, 1, NOW());
+ELSE
+    UPDATE shopping_cart
+    SET quantity = quantity + 1, buy_now = true
+    WHERE cart_id = inCartId
+    AND product_id = inProductId
+    AND attributes = inAttributes;
+END IF;
+END$$
 
+--создаем хранимую процедуру shopping_cart_update
+create procedure shopping_cart_update(IN inItemId INT, IN inQuantity INT)
+begin 
+    if inQuantity > 0 then
+        update shopping_cart
+        set quantity = inQuantity, added_on = NOW()
+        where item_id = inItemId;
+    else
+        call shopping_cart_remove_product(inItemId);
+END IF;
+END$$
 
+--создаем хранимую процедуру shopping_cart_remove_product
+create procedure shopping_cart_remove_product(IN inItemId INT)
+begin 
+    delete from shopping_cart where item_id = inItemId;
+END$$
 
+--создаем хранимую процедуру shopping_cart_get_products
+create procedure shopping_cart_get_products(IN inCartId char(32))
+begin
+    select sc.item_id, p.name, sc.attributes,
+    COALESCE(NULLIF(p.discount_price, 0),p.price) AS price, sc.quantity,
+    COALESCE(NULLIF(p.discount_price, 0), p.price) * sc.quantity AS subtotal
+    from shopping_cart sc
+    inner join product p
+        on sc.product_id = p.product_id
+        where sc.cart_id = inCartId AND sc.buy_now;
+END$$
 
+--создаем хранимую процедуру shopping_cart_get_saved_products
+create procedure shopping_cart_get_saved_products(IN inCartId char(32))
+begin
+    select sc.item_id, p.name, sc.attributes,
+    COALESCE(NULLIF(p.discount_price, 0),p.price) AS price
+    from shopping_cart sc
+    inner join product p
+        on sc.product_id = p.product_id
+    where sc.cart_id = inCartId AND sc.buy_now;
+END$$
 
+--создаем хранимую процедуру shopping_cart_get_total_amount
+create procedure shopping_cart_get_total_amount(in inCartId CHAR(32))
+begin
+    select sum(coalesce(nullif(p.discount_price, 0), p.price) 
+                * sc.quantity) AS total_amount
+    from shopping_cart sc
+    inner join product p
+        on sc.product_id = p.product_id
+    where sc.cart_id = inCartId AND sc.buy_now;
+END$$
 
+--создаем хранимую процедуру shopping_cart_save_product_for_later
+create procedure shopping_cart_save_product_for_later(in inItemId INT)
+BEGIN 
+    UPDATE shopping_cart
+    set buy_now = false, quantity = 1
+    where item_id = inItemId;
+END$$
+
+--создаем хранимую процедуру shopping_cart_move_product_to_cart
+create procedure shopping_cart_move_product_to_cart(in inItemId INT)
+BEGIN
+    UPDATE  shopping_cart
+    SET buy_now = true, added_on = now()
+    WHERE item_id = inItemId;
+END$$

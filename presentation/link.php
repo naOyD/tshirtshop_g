@@ -256,5 +256,22 @@ class Link
     return self::ToAdmin($link);
   }
   
+  //Создает ссылку на страницу адмистрирования товаров
+  public static function ToCategoryProductsAdmin($departmentId, $categoryId)
+  {
+    $link = 'Page=Products&DepartmentId=' . $departmentId .
+            '&CategoryId=' . $categoryId;
+            
+    return self::ToAdmin($link);
+  }
+  //Создаем ссылку на страницу администрирования информации о товарах
+  public static function ToProductAdmin($departmentId, $categoryId, $productId)
+  {
+   $link = 'Page=ProductDetails&DepartmentId=' . $departmentId . '&CategoryId='
+           . $categoryId . '&ProductId=' . $productId;
+   return self::ToAdmin($link);
+  }
+  
+  
 }
 ?>

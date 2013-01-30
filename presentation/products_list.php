@@ -11,7 +11,9 @@ class ProductsList
   public $mSearchDescription;
   public $mAllWords = 'off';
   public $mSearchString;
-
+  public $mEditActionTarget;
+  public $mShowEditButton;
+  
   // Private members
   private $_mDepartmentId;
   private $_mCategoryId;
@@ -43,11 +45,52 @@ class ProductsList
 
     // Save page request for continue shopping functionality
     $_SESSION['link_to_continue_shopping'] = $_SERVER['QUERY_STRING'];
+    
+    //Отображаем кнопку редактирования,если посетитель - админ
+    if (!(isset($_SESSION['admin_logged'])) || 
+            $_SESSION['admin_logged'] != TRUE)
+        $this->mShowEditButton = FALSE;
+    else 
+        $this->mShowEditButton = TRUE;
+    
   }
 
   public function init()
   {
-    /* If searching the catalog, get the list of products by calling
+   //Подготавливаем кнопку редактирования
+   $this->mEditActionTarget = 
+   Link::Build(str_replace(VIRTUAL_LOCATION, '', getenv('REQUEST_URI')));
+   
+   if (isset($_SESSION['admin_logged']) &&
+      $_SESSION['admin_logged'] == TRUE &&
+           isset ($_POST['product_id']))
+   {
+       if (isset($this->_mDepartmentId) && isset($this->_mCategoryId))
+           header ('Location: ' . 
+           htmlspecialchars_decode (
+            Link::ToProductAdmin ($this->_mDepartmentId, $this->_mCategoryId,
+                        (int)$_POST['product_id'])));
+        else 
+        {
+            $product_locations = 
+            Catalog::GetProductLocations((int)$_POST['product_id']);
+            
+            if (count($product_locations) > 0)
+            {
+                $department_id = $product_locations[0]['department_id'];
+                $category_id = $product_locations[0]['category_id'];
+                
+                header('Location: ' .
+                htmlspecialchars_decode(
+                        Link::ToProductAdmin($department_id, 
+                                             $category_id, 
+                                             (int)$_POST['product_id'])));
+            }
+        }
+   }
+      
+      
+      /* If searching the catalog, get the list of products by calling
        the Search business tier method */
     if (isset ($this->mSearchString))
     {

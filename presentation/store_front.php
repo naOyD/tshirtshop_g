@@ -19,6 +19,9 @@ class StoreFront
   // Initialize presentation object
   public function init()
   {
+      $_SESSION['link_to_store_front'] = 
+      Link::Build(str_replace(VIRTUAL_LOCATION, '', getenv('REQUEST_URI')));
+      
      // Create "Continue Shopping" link for the PayPal shopping cart
     if (!isset ($_GET['AddProduct']))
     {

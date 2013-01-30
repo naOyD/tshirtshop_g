@@ -60,4 +60,9 @@ define('USE_SSL', 'no');
 define('ADMIN_USERNAME', 'admin');
 define('ADMIN_PASSWORD', 'admin');
 
+
+//Типы товаров в корзине покупателя
+define('GET_CART_PRODUCTS', 1);
+define('GET_CART_SAVED_PRODUCTS', 2);
+
 ?>

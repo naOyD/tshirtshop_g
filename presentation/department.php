@@ -1,40 +1,52 @@
 <?php
-// Çàíèìàåòñÿ èçâëå÷åíèåì ñâåäåíèé îá îòäåëå
+// Ð—Ð°Ð½Ð¸Ð¼Ð°ÐµÑ‚ÑÑ Ð¸Ð·Ð²Ð»ÐµÑ‡ÐµÐ½Ð¸ÐµÐ¼ ÑÐ²ÐµÐ´ÐµÐ½Ð¸Ð¹ Ð¾Ð± Ð¾Ñ‚Ð´ÐµÐ»Ðµ
 class Department
 {
-  // Ïàáëèê ïåðåìåííûå äîñòóïíûå äëÿ øàáëîíîâ Smarty
+  // ÐŸÐ°Ð±Ð»Ð¸Ðº Ð¿ÐµÑ€ÐµÐ¼ÐµÐ½Ð½Ñ‹Ðµ Ð´Ð¾ÑÑ‚ÑƒÐ¿Ð½Ñ‹Ðµ Ð´Ð»Ñ ÑˆÐ°Ð±Ð»Ð¾Ð½Ð¾Ð² Smarty
   public $mName;
   public $mDescription;
-
-  // Private ýëåìåíòû
+  public $mEditActionTarget;
+  public $mEditAction;
+  public $mEditButtonCaption;
+  public $mShowEditButton;
+  
+  // Private ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚Ñ‹
   private $_mDepartmentId;
   private $_mCategoryId;
 
-  // Êîíñòðóêòîð êëàññà
+  // ÐšÐ¾Ð½ÑÑ‚Ñ€ÑƒÐºÑ‚Ð¾Ñ€ ÐºÐ»Ð°ÑÑÐ°
   public function __construct()
   {
-    // â ñòðîêå çàïðîñà äîëæåí ïðèñóòñòâîâàòü ïàðàìåòð DepartmentId
+    // Ð² ÑÑ‚Ñ€Ð¾ÐºÐµ Ð·Ð°Ð¿Ñ€Ð¾ÑÐ° Ð´Ð¾Ð»Ð¶ÐµÐ½ Ð¿Ñ€Ð¸ÑÑƒÑ‚ÑÑ‚Ð²Ð¾Ð²Ð°Ñ‚ÑŒ Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€ DepartmentId
     if (isset ($_GET['DepartmentId']))
       $this->_mDepartmentId = (int)$_GET['DepartmentId'];
     else
       trigger_error('DepartmentId not set');
 
-    /* Åñëè CategoryId åñòü â çàïðîñÅ, òî ìû åãî ñîõðàíÿåì 
-       (ïðåîáðàçóþ â int äëÿ çàùèòû îò íåêêîðåêòíûõ çíà÷åíèé) */
+    /* Ð•ÑÐ»Ð¸ CategoryId ÐµÑÑ‚ÑŒ Ð² Ð·Ð°Ð¿Ñ€Ð¾ÑÐ•, Ñ‚Ð¾ Ð¼Ñ‹ ÐµÐ³Ð¾ ÑÐ¾Ñ…Ñ€Ð°Ð½ÑÐµÐ¼ 
+       (Ð¿Ñ€ÐµÐ¾Ð±Ñ€Ð°Ð·ÑƒÑŽ Ð² int Ð´Ð»Ñ Ð·Ð°Ñ‰Ð¸Ñ‚Ñ‹ Ð¾Ñ‚ Ð½ÐµÐºÐºÐ¾Ñ€ÐµÐºÑ‚Ð½Ñ‹Ñ… Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ð¹) */
     if (isset ($_GET['CategoryId']))
       $this->_mCategoryId = (int)$_GET['CategoryId'];
+    
+    //ÐžÑ‚Ð¾Ð±Ñ€Ð°Ð¶Ð°ÐµÐ¼ ÐºÐ½Ð¾Ð¿ÐºÑƒ Ñ€ÐµÐ´Ð°ÐºÑ‚Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ñ,ÐµÑÐ»Ð¸ Ð¿Ð¾ÑÐµÑ‚Ð¸Ñ‚ÐµÐ»ÑŒ - Ð°Ð´Ð¼Ð¸Ð½
+    if (!(isset($_SESSION['admin_logged'])) || 
+            $_SESSION['admin_logged'] != TRUE)
+        $this->mShowEditButton = FALSE;
+    else 
+        $this->mShowEditButton = TRUE;
+   
   }
 
   public function init()
   {
-    // Åñëè ïîñåùàåì îòäåë
+    // Ð•ÑÐ»Ð¸ Ð¿Ð¾ÑÐµÑ‰Ð°ÐµÐ¼ Ð¾Ñ‚Ð´ÐµÐ»
     $department_details =
       Catalog::GetDepartmentDetails($this->_mDepartmentId);
 
     $this->mName = $department_details['name'];
     $this->mDescription = $department_details['description'];
 
-    // Åñëè ïîñåùàåì êàòåãîðèþ
+    // Ð•ÑÐ»Ð¸ Ð¿Ð¾ÑÐµÑ‰Ð°ÐµÐ¼ ÐºÐ°Ñ‚ÐµÐ³Ð¾Ñ€Ð¸ÑŽ
     if (isset ($this->_mCategoryId))
     {
       $category_details =
@@ -43,9 +55,18 @@ class Department
       $this->mName = $this->mName . ' &raquo; ' .
                      $category_details['name'];
       $this->mDescription = $category_details['description'];
+      
+      $this->mEditActionTarget = 
+      Link::ToDepartmentCategoriesAdmin($this->_mDepartmentId);
+      $this->mEditAction = 'edit_cat_' . $this->_mCategoryId;
+      $this->mEditButtonCaption = 'Ð Ð°Ð´Ð°ÐºÑ‚Ð¸Ñ€Ð¾Ð²Ð°Ñ‚ÑŒ ÐºÐ°Ñ‚ÐµÐ³Ð¾Ñ€Ð¸ÑŽ';
     }
-    
-
+    else 
+    {
+        $this->mEditActionTarget = Link::ToDepartmentsAdmin();
+        $this->mEditAction = 'edit_dept' . $this->_mDepartmentId;
+        $this->mEditButtonCaption = 'Ð ÐµÐ´Ð°ÐºÑ‚Ð¸Ñ€Ð¾Ð²Ð°Ñ‚ÑŒ Ð¾Ñ‚Ð´ÐµÐ»';
+    }
   }
 }
 ?>

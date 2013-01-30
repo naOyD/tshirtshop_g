@@ -3,7 +3,14 @@
 
 class Catalog
 {
-    // получаем список отдело
+    // определяем места отображения товара
+    public static $mProductDisplayOptions = array ('Default', // 0
+                                                   'On Catalog', // 1
+                                                   'On Department', // 2
+                                                   'On Both'); // 3)
+
+
+    // получаем список отделов
 public static function GetDepartments()
     {
         //Составляем SQL запрос
@@ -529,7 +536,250 @@ public static function GetProductName($productId)
     // Execute the query and return the results
     return DatabaseHandler::GetOne($sql, $params);
   }
+  //Получаем товары заданной категории
+  public static function GetCategoryProducts($categoryId)
+  {
+    //Составляем запрос
+    $sql = 'CALL catalog_get_category_products(:category_id)';
+    
+    //Создаем массив параметров
+    $params = array(':category_id' =>$categoryId);
+    
+    //Выполняем запрос и возвращаем результат
+    return DatabaseHandler::GetAll($sql,$params);
+  }
+  
+  //Создаем товар и зачисляем его в категорию
+  public static function AddProductToCategory($categoryId, $productName, $productDescription, $productPrice)
+  {
+    //Составляем запрос
+    $sql = 'CALL catalog_add_product_to_category(:category_id, :product_name, 
+                                                 :product_description, :product_price)';
+    //Создаем массив параметров
+    $params = array(':category_id' => $categoryId,
+                    ':product_name' => $productName,
+                    ':product_description' => $productDescription,
+                    ':product_price' => $productPrice);
+    //Выполняем запрос
+    DatabaseHandler::Execute($sql, $params);
+  }
+  // Updates a product
+  public static function UpdateProduct($productId, $productName,
+                   $productDescription, $productPrice,
+                   $productDiscountedPrice)
+  {
+    // Build the SQL query
+    $sql = 'CALL catalog_update_product(:product_id, :product_name,
+                   :product_description, :product_price,
+                   :product_discounted_price)';
 
+    // Build the parameters array
+    $params = array (':product_id' => $productId,
+                     ':product_name' => $productName,
+                     ':product_description' => $productDescription,
+                     ':product_price' => $productPrice,
+                     ':product_discounted_price' => $productDiscountedPrice);
+
+    // Execute the query
+    DatabaseHandler::Execute($sql, $params);
+  }
+
+  // Removes a product from the product catalog
+  public static function DeleteProduct($productId)
+  {
+    // Build SQL query
+    $sql = 'CALL catalog_delete_product(:product_id)';
+
+    // Build the parameters array
+    $params = array (':product_id' => $productId);
+
+    // Execute the query
+    DatabaseHandler::Execute($sql, $params);
+  }
+
+  // Unassigns a product from a category
+  public static function RemoveProductFromCategory($productId, $categoryId)
+  {
+    // Build SQL query
+    $sql = 'CALL catalog_remove_product_from_category(
+                   :product_id, :category_id)';
+
+    // Build the parameters array
+    $params = array (':product_id' => $productId,
+                     ':category_id' => $categoryId);
+
+    // Execute the query and return the results
+    return DatabaseHandler::GetOne($sql, $params);
+  }
+
+  // Retrieves the list of categories a product belongs to
+  public static function GetCategories()
+  {
+    // Build SQL query
+    $sql = 'CALL catalog_get_categories()';
+
+    // Execute the query and return the results
+    return DatabaseHandler::GetAll($sql);
+  }
+
+  // Retrieves product info
+  public static function GetProductInfo($productId)
+  {
+    // Build SQL query
+    $sql = 'CALL catalog_get_product_info(:product_id)';
+
+    // Build the parameters array
+    $params = array (':product_id' => $productId);
+
+    // Execute the query and return the results
+    return DatabaseHandler::GetRow($sql, $params);
+  }
+
+  // Retrieves the list of categories a product belongs to
+  public static function GetCategoriesForProduct($productId)
+  {
+    // Build SQL query
+    $sql = 'CALL catalog_get_categories_for_product(:product_id)';
+
+    // Build the parameters array
+    $params = array (':product_id' => $productId);
+
+    // Execute the query and return the results
+    return DatabaseHandler::GetAll($sql, $params);
+  }
+
+  // Assigns a product to a category
+  public static function SetProductDisplayOption($productId, $display)
+  {
+    // Build SQL query
+    $sql = 'CALL catalog_set_product_display_option(
+                   :product_id, :display)';
+
+    // Build the parameters array
+    $params = array (':product_id' => $productId,
+                     ':display' => $display);
+
+    // Execute the query
+    DatabaseHandler::Execute($sql, $params);
+  }
+
+  // Assigns a product to a category
+  public static function AssignProductToCategory($productId, $categoryId)
+  {
+    // Build SQL query
+    $sql = 'CALL catalog_assign_product_to_category(
+                   :product_id, :category_id)';
+
+    // Build the parameters array
+    $params = array (':product_id' => $productId,
+                     ':category_id' => $categoryId);
+
+    // Execute the query
+    DatabaseHandler::Execute($sql, $params);
+  }
+
+  // Moves a product from one category to another
+  public static function MoveProductToCategory($productId, $sourceCategoryId,
+                                               $targetCategoryId)
+  {
+    // Build SQL query
+    $sql = 'CALL catalog_move_product_to_category(:product_id,
+                   :source_category_id, :target_category_id)';
+
+    // Build the parameters array
+    $params = array (':product_id' => $productId,
+                     ':source_category_id' => $sourceCategoryId,
+                     ':target_category_id' => $targetCategoryId);
+
+    // Execute the query
+    DatabaseHandler::Execute($sql, $params);
+  }
+
+  // Gets the catalog attributes that are not assigned to the specified product
+  public static function GetAttributesNotAssignedToProduct($productId)
+  {
+    // Build the SQL query
+    $sql = 'CALL catalog_get_attributes_not_assigned_to_product(:product_id)';
+
+    // Build the parameters array
+    $params = array (':product_id' => $productId);
+
+    // Execute the query and return the results
+    return DatabaseHandler::GetAll($sql, $params);
+  }
+
+  // Assign an attribute value to the specified product
+  public static function AssignAttributeValueToProduct($productId,
+                                                       $attributeValueId)
+  {
+    // Build SQL query
+    $sql = 'CALL catalog_assign_attribute_value_to_product(
+                   :product_id, :attribute_value_id)';
+
+    // Build the parameters array
+    $params = array (':product_id' => $productId,
+                     ':attribute_value_id' => $attributeValueId);
+
+    // Execute the query
+    DatabaseHandler::Execute($sql, $params);
+  }
+
+  // Removes a product attribute value
+  public static function RemoveProductAttributeValue($productId,
+                                                     $attributeValueId)
+  {
+    // Build SQL query
+    $sql = 'CALL catalog_remove_product_attribute_value(
+                   :product_id, :attribute_value_id)';
+
+    // Build the parameters array
+    $params = array (':product_id' => $productId,
+                     ':attribute_value_id' => $attributeValueId);
+
+    // Execute the query
+    DatabaseHandler::Execute($sql, $params);
+  }
+
+
+  // Changes the name of the product image file in the database
+  public static function SetImage($productId, $imageName)
+  {
+    // Build SQL query
+    $sql = 'CALL catalog_set_image(:product_id, :image_name)';
+
+    // Build the parameters array
+    $params = array (':product_id' => $productId, ':image_name' => $imageName);
+
+    // Execute the query
+    DatabaseHandler::Execute($sql, $params);
+  }
+
+  // Changes the name of the second product image file in the database
+  public static function SetImage2($productId, $imageName)
+  {
+    // Build SQL query
+    $sql = 'CALL catalog_set_image_2(:product_id, :image_name)';
+
+    // Build the parameters array
+    $params = array (':product_id' => $productId, ':image_name' => $imageName);
+
+    // Execute the query
+    DatabaseHandler::Execute($sql, $params);
+  }
+
+  // Changes the name of the product thumbnail file in the database
+  public static function SetThumbnail($productId, $thumbnailName)
+  {
+    // Build SQL query
+    $sql = 'CALL catalog_set_thumbnail(:product_id, :thumbnail_name)';
+
+    // Build the parameters array
+    $params = array (':product_id' => $productId,
+                     ':thumbnail_name' => $thumbnailName);
+
+    // Execute the query
+    DatabaseHandler::Execute($sql, $params);
+  }
 }  
 
 ?>

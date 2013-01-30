@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.8, created on 2012-11-19 22:18:21
+<?php /* Smarty version Smarty-3.1.8, created on 2012-12-18 21:21:47
          compiled from "C:\xampp1.8\htdocs\myWork\tshirtshop_g/presentation/templates\products_list.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:2690550aaa21d943135-43906747%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'c40f62dbc78021598c9a650a8a50f1305bfb882e' => 
     array (
       0 => 'C:\\xampp1.8\\htdocs\\myWork\\tshirtshop_g/presentation/templates\\products_list.tpl',
-      1 => 1352998310,
+      1 => 1355862104,
       2 => 'file',
     ),
   ),
@@ -15,13 +15,13 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'function' => 
   array (
   ),
+  'version' => 'Smarty-3.1.8',
+  'unifunc' => 'content_50aaa21dad5354_43262645',
   'variables' => 
   array (
     'obj' => 0,
   ),
   'has_nocache_code' => false,
-  'version' => 'Smarty-3.1.8',
-  'unifunc' => 'content_50aaa21dad5354_43262645',
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_50aaa21dad5354_43262645')) {function content_50aaa21dad5354_43262645($_smarty_tpl) {?><?php if (!is_callable('smarty_function_load_presentation_object')) include './presentation/smarty_plugins\\function.load_presentation_object.php';
 ?>
@@ -142,6 +142,7 @@ $_smarty_tpl->tpl_vars['smarty']->value['section']['k']['last']       = ($_smart
             <span class="price"><?php echo $_smarty_tpl->tpl_vars['obj']->value->mProducts[$_smarty_tpl->getVariable('smarty')->value['section']['k']['index']]['price'];?>
 </span>
           <?php }?>
+          &nbsp; руб. 
         </p>
 
         
@@ -207,6 +208,16 @@ $_smarty_tpl->tpl_vars['smarty']->value['section']['l']['last']       = ($_smart
         </p>
         </form>
 
+<?php if ($_smarty_tpl->tpl_vars['obj']->value->mShowEditButton){?>
+    <form method="post" action="<?php echo $_smarty_tpl->tpl_vars['obj']->value->mEditActionTarget;?>
+" target="_self"
+          class="edit-form" >
+        <input type="hidden" name="product_id" 
+               value="<?php echo $_smarty_tpl->tpl_vars['obj']->value->mProducts[$_smarty_tpl->getVariable('smarty')->value['section']['k']['index']]['product_id'];?>
+" />
+        <input type="submit" name="submit" value="Редактировать товар"/>
+    </form>
+<?php }?>
       </td>
     <?php if ($_smarty_tpl->getVariable('smarty')->value['section']['k']['index']%2!=0&&!$_smarty_tpl->getVariable('smarty')->value['section']['k']['first']||$_smarty_tpl->getVariable('smarty')->value['section']['k']['last']){?>
     </tr>

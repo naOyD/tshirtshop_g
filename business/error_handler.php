@@ -15,7 +15,7 @@ class ErrorHandler
     // метод обработки ошибок
     public static function Handler($errNo, $errStr, $errFile, $errLine)
     {
-        // первые лва элемента массива нам неинтересны
+        // первые два элемента массива нам неинтересны
         $backtrace = ErrorHandler::GetBacktrace(2);
         
         // Сообщения об ошибках, которые будут выводится, отправляться по эл. почте
