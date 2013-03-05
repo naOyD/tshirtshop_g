@@ -219,7 +219,7 @@ class ProductsList
 
       // Create the Add to Cart link
       $this->mProducts[$i]['link_to_add_product'] =
-        Link::ToAddProduct($this->mProducts[$i]['product_id']);
+        Link::ToCart(ADD_PRODUCT, $this->mProducts[$i]['product_id']);
 
       $this->mProducts[$i]['attributes'] =
         Catalog::GetProductAttributes($this->mProducts[$i]['product_id']);

@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.8, created on 2012-11-19 22:18:21
+<?php /* Smarty version Smarty-3.1.8, created on 2013-01-31 20:25:40
          compiled from "C:\xampp1.8\htdocs\myWork\tshirtshop_g/presentation/templates\store_front.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:1545950aaa21d64aed5-58183241%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '374e708bb5b8207e0027e4f65aa7f2a6a82859d1' => 
     array (
       0 => 'C:\\xampp1.8\\htdocs\\myWork\\tshirtshop_g/presentation/templates\\store_front.tpl',
-      1 => 1352927132,
+      1 => 1359657748,
       2 => 'file',
     ),
   ),
@@ -15,13 +15,13 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'function' => 
   array (
   ),
+  'version' => 'Smarty-3.1.8',
+  'unifunc' => 'content_50aaa21d7ba553_76691433',
   'variables' => 
   array (
     'obj' => 0,
   ),
   'has_nocache_code' => false,
-  'version' => 'Smarty-3.1.8',
-  'unifunc' => 'content_50aaa21d7ba553_76691433',
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_50aaa21d7ba553_76691433')) {function content_50aaa21d7ba553_76691433($_smarty_tpl) {?><?php if (!is_callable('smarty_function_load_presentation_object')) include './presentation/smarty_plugins\\function.load_presentation_object.php';
 ?>
@@ -65,23 +65,9 @@ images/images/title.png" alt="tshirtshop logo"/>
              <?php echo $_smarty_tpl->getSubTemplate ("departments_list.tpl", $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, null, null, array(), 0);?>
 
              <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['obj']->value->mCategoriesCell, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, null, null, array(), 0);?>
- 
-            <div class="view-cart">
-                <form target="_self" method="post" action="<?php echo @PAYPAL_URL;?>
-">
-                <input type='hidden' name="cmd" value="_cart"/>
-                <input type="hidden" name="business" value="<?php echo @PAYPAL_EMAIL;?>
-"/>
-                <input type="hidden" name="display" value="1"/>
-                <input type="hidden" name="shopping_url" value="<?php echo $_smarty_tpl->tpl_vars['obj']->value->mPayPalContinueShoppingLink;?>
-"/>
-                <input type="hidden" name="return" value="<?php echo @PAYPAL_RETURN_URL;?>
-"/>
-                <input type="hidden" name="return" value="<?php echo @PAYPAL_CANCEL_RETURN_URL;?>
-"/>
-                <input type="submit" name="view_cart" value="View Cart"/>
-                </form>
-            </div>
+
+             <?php echo $_smarty_tpl->getSubTemplate ($_smarty_tpl->tpl_vars['obj']->value->mCartSummaryCell, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, null, null, array(), 0);?>
+
             </div> 
         </div> 
        <div id="ft" role="contentinfo">created by naOy</div> 

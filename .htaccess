@@ -36,3 +36,6 @@ RewriteBase /myWork/tshirtshop_g
   
   #Задает страницу по умолчанию для кода состояния 404
   ErrorDocument 404 /tshirtshop_g/404.php;
+  
+  #Перезаписывем страницы с содержимым корзины
+  RewriteRule ^cart-details/?$ index.php?CartAction [L]

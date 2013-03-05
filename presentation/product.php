@@ -77,7 +77,7 @@ class Product
 
     // Create the Add to Cart link
     $this->mProduct['link_to_add_product'] =
-      Link::ToAddProduct($this->_mProductId);
+      Link::ToCart(ADD_PRODUCT, $this->_mProductId);
 
     // Build links for product departments and categories pages
     for ($i = 0; $i < count($this->mLocations); $i++)

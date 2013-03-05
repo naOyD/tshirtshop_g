@@ -17,6 +17,7 @@ require_once PRESENTATION_DIR . 'link.php';
 
 // Загружаем уровень логики приложения
 require_once BUSINESS_DIR . 'catalog.php';
+require_once BUSINESS_DIR . 'shopping_cart.php';
 
 // Загружаем дескриптор базы данных
 require_once BUSINESS_DIR . 'database_handler.php';

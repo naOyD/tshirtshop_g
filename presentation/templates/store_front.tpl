@@ -28,18 +28,8 @@
             <div class="yui-b">
              {include file="search_box.tpl"}
              {include file="departments_list.tpl"}
-             {include file=$obj->mCategoriesCell} 
-            <div class="view-cart">
-                <form target="_self" method="post" action="{$smarty.const.PAYPAL_URL}">
-                <input type='hidden' name="cmd" value="_cart"/>
-                <input type="hidden" name="business" value="{$smarty.const.PAYPAL_EMAIL}"/>
-                <input type="hidden" name="display" value="1"/>
-                <input type="hidden" name="shopping_url" value="{$obj->mPayPalContinueShoppingLink}"/>
-                <input type="hidden" name="return" value="{$smarty.const.PAYPAL_RETURN_URL}"/>
-                <input type="hidden" name="return" value="{$smarty.const.PAYPAL_CANCEL_RETURN_URL}"/>
-                <input type="submit" name="view_cart" value="View Cart"/>
-                </form>
-            </div>
+             {include file=$obj->mCategoriesCell}
+             {include file=$obj->mCartSummaryCell}
             </div> 
         </div> 
        <div id="ft" role="contentinfo">created by naOy</div> 

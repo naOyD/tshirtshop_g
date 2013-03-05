@@ -81,7 +81,7 @@ class ShoppingCart
                         ':quantity' => $quantity);
         
         // Выполняем запрос
-        DatabaseHandler::Execute($sql, $params);
+        DatabaseHandler::Execute($sql, $params);    
     }
     
     // Удаляет товар из корзины
@@ -128,8 +128,41 @@ class ShoppingCart
     public static function GetTotalAmount()
     {
         // Составляем SQL - запрос
+        $sql = 'CALL shopping_cart_get_total_amount(:cart_id)';
         
+        // Создаем массив параметров
+        $params = array (':cart_id' => self::GetCartId());
+        
+        // Выполняем запрос и возвращаем результат
+        return DatabaseHandler::GetOne($sql, $params);
     }
+    
+    // Переносит товар в список отложенных для оплаты в будующем
+    public static function SaveProductForLater($itemId)
+    {
+        // Составляем SQL - запрос
+        $sql = 'CALL shopping_cart_save_product_for_later(:item_id)';
+        
+        // Создаем массив параметров
+        $params = array (':item_id' => $itemId);
+        
+        // Выполняем запрос 
+        DatabaseHandler::Execute($sql, $params);
+    }
+    
+    /* Возвращает товар из списка отложенных в список
+    подлежащий немедленной оплате*/
+    public static function MoveProductToCart($itemId)
+    {
+        // Составляем SQL - запрос
+        $sql = 'CALL shopping_cart_move_product_to_cart(:item_id)';
+        
+        // Создаем массив параметров
+        $params = array (':item_id' => $itemId);
+        
+        // Выполняем запрос
+        DatabaseHandler::Execute($sql, $params);
+    } 
 }
 ?>
 

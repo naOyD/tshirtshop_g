@@ -6,6 +6,8 @@ class StoreFront
   public $mContentsCell = 'first_page_contents.tpl';
   // Define the template file for the categories cell
   public $mCategoriesCell = 'blank.tpl';
+  // Определяем файл шаблона для ячейки содержимого корзины
+  public $mCartSummaryCell = 'blank.tpl';
   // Page title
   public $mPageTitle;
   // PayPal continue shopping link
@@ -22,77 +24,11 @@ class StoreFront
       $_SESSION['link_to_store_front'] = 
       Link::Build(str_replace(VIRTUAL_LOCATION, '', getenv('REQUEST_URI')));
       
-     // Create "Continue Shopping" link for the PayPal shopping cart
-    if (!isset ($_GET['AddProduct']))
-    {
-      /* Store the current request needed for the paypal
-         continue shopping functionality */
-      $_SESSION['paypal_continue_shopping'] =
-        Link::Build(str_replace(VIRTUAL_LOCATION, '',
-                                $_SERVER['REQUEST_URI']));
+      // Создаем ссылку для возврата в каталог
+      if (!isset ($_GET['CartAction']))
+          $_SESSION['link_to_last_page_loaded'] = 
+            $_SESSION['link_to_store_front'];
 
-      $this->mPayPalContinueShoppingLink =
-        $_SESSION['paypal_continue_shopping'];
-    }
-    // If Add to Cart was clicked, prepare PayPal variables
-    else
-    {
-      // Clean output buffer
-      ob_clean();
-
-      $product_id = 0;
-
-      // Get the product ID to be added to cart
-      if (isset ($_GET['AddProduct']))
-        $product_id = (int)$_GET['AddProduct'];
-      else
-        trigger_error('AddProduct not set');
-
-      $selected_attribute_groups = array ();
-      $selected_attribute_values = array ();
-
-      // Get selected product attributes if any
-      foreach ($_POST as $key => $value)
-      {
-        // If there are fields starting with "attr_" in the POST array
-        if (substr($key, 0, 5) == 'attr_')
-        {
-          // Get the selected attribute name and value
-          $selected_attribute_groups[] = substr($key, strlen('attr_'));
-          $selected_attribute_values[] = $_POST[$key];
-        }
-      }
-
-      // Get product info
-      $product = Catalog::GetProductDetails($product_id);
-
-      // Build the PayPal url to add the product to cart
-      $paypal_url = PAYPAL_URL . '?cmd=_cart&business=' . PAYPAL_EMAIL .
-                    '&item_name=' . rawurlencode($product['name']);
-
-      if (count($selected_attribute_groups) > 0)
-        $paypal_url .= '&on0=' . implode('/', $selected_attribute_groups) .
-                       '&os0=' . implode('/', $selected_attribute_values);
-
-      $paypal_url .=
-        '&amount=' . ($product['discounted_price'] == 0 ?
-                      $product['price'] : $product['discounted_price']) .
-        '&currency_code=' . PAYPAL_CURRENCY_CODE . '&add=1' .
-        '&shopping_url=' .
-          rawurlencode($_SESSION['paypal_continue_shopping']) .
-        '&return=' . rawurlencode(PAYPAL_RETURN_URL) .
-        '&cancel_return=' . rawurlencode(PAYPAL_CANCEL_RETURN_URL);
-
-      // Redirect to the PayPal cart page
-      header('HTTP/1.1 302 Found');
-      header('Location: ' . $paypal_url);
-
-      // Clear the output buffer and stop execution
-      flush();
-      ob_flush();
-      ob_end_clean();
-      exit();
-    }
     // Load department details if visiting a department
     if (isset ($_GET['DepartmentId']))
     {
@@ -115,6 +51,12 @@ class StoreFront
     elseif (isset ($_GET['SearchResults']))
       $this->mContentsCell = 'search_results.tpl';
 
+    // Загружаем шаблон для отображения содержимого корзины
+    if (isset ($_GET['CartAction']))
+        $this->mContentsCell= 'cart_details.tpl';
+    else
+        $this->mCartSummaryCell = 'cart_summary.tpl';
+    
     // Load the page title
     $this->mPageTitle = $this->_GetPageTitle();
   }

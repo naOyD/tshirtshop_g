@@ -104,7 +104,7 @@ class Link
     $proper_url = '';
 
     if (isset ($_GET['Search']) || isset($_GET['SearchResults']) ||
-        isset ($_GET['AddProduct']))
+        isset ($_GET['CartAction']))
     {
       return ;
     }
@@ -204,12 +204,6 @@ class Link
 
     return self::Build($link);
   }
-
-  // Create an Add to Cart link
-  public static function ToAddProduct($productId)
-  {
-    return self::Build('index.php?AddProduct=' . $productId);
-  }
   
   //Создаем ссылку на страницу администрирования
     public static function ToAdmin($params = '')
@@ -272,6 +266,36 @@ class Link
    return self::ToAdmin($link);
   }
   
+  //Создаем ссылки для корзины покупателя
+  public static function ToCart($action = 0, $target = null)
+  {
+      $link = '';
+      switch ($action)
+      {
+          case ADD_PRODUCT:
+              $link = 'index.php?CartAction=' . ADD_PRODUCT . '&ItemId=' . $target;
+              break;
+          case REMOVE_PRODUCT:
+              $link = 'index.php?CartAction=' .
+                  REMOVE_PRODUCT . '&ItemId=' . $target;
+              break;
+          case UPDATE_PRODUCTS_QUANTITIES:
+              $link = 'index.php?CartAction=' . UPDATE_PRODUCTS_QUANTITIES ;
+              break;
+          case SAVE_PRODUCT_FOR_LATER:
+              $link = 'index.php?CartAction=' . SAVE_PRODUCT_FOR_LATER .
+                  '&ItemId=' . $target;
+              break;
+          case MOVE_PRODUCT_TO_CART:
+              $link = 'index.php?CartAction=' . MOVE_PRODUCT_TO_CART . 
+                  '&ItemId=' . $target;
+              break;
+
+          default :
+              $link = 'cart-details/';
+      }
+      return self::Build($link);
+  }
   
 }
 ?>
