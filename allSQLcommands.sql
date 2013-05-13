@@ -386,3 +386,48 @@ BEGIN
     SET buy_now = true, added_on = now()
     WHERE item_id = inItemId;
 END$$
+
+--создаем хранимую процедуру shopping_cart_count_old_carts
+ create procedure shopping_cart_count_old_carts(IN inDays INT)
+BEGIN
+    SELECT COUNT (cart_id) AS old_shopping_carts_count
+    FROM (SELECT cart_id
+          FROM shopping_cart
+          GROUP BY cart_id
+          HAVING DATE_SUB(NOW(), INTERVAL inDays DAY) >= MAX (added_on))
+          AS old_carts;
+END$$
+
+--создаем хранимую процедуру catalog_delete_product
+CREATE PROCEDURE catalog_delete_product (IN inProductId INT)
+BEGIN
+    DELETE FROM product_attribute WHERE product_id = inProductId;
+    DELETE FROM product_category WHERE product_id = inProductId;
+    DELETE FROM shopping_cart WHERE product_id = inProductId;
+    DELETE FROM product WHERE product_id = inProductId;
+END$$
+
+--создаем хранимую процедуру shopping_cart_count_old_carts
+CREATE PROCEDURE shopping_cart_count_old_carts (IN inDays INT)
+BEGIN
+    SELECT COUNT(cart_id) AS old_shopping_carts_count
+    FROM (SELECT card_id 
+    FROM shopping_cart 
+    GROUP BY cart_id
+    HAVING DATE_SUB(NOW(), INTERVAL inDays DAY) >= MAX(added_on))
+    AS old_carts;
+END$$
+
+--создаем хранимую процедуру shopping_cart_delete_old_carts
+CREATE PROCEDURE shopping_cart_delete_old_carts(IN inDays INT)
+BEGIN
+    DELETE FROM shopping_cart
+    WHERE cart_id IN
+        (SELECT cart_id
+         FROM (SELECT cart_id 
+               FROM shopping_cart
+               GROUP BY cart_id
+               HAVING DATE_SUB(NOW(), INTERVAL inDays DAY) >=
+               MAX(added_on))
+               AS sc);
+END$$
